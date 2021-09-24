@@ -6,19 +6,22 @@ const controller = require("../controllers/moviesController");
 const validations = require("../validations/movies");
 
 router
-    // all movies
+    // all
     .get("/",controller.list)
 
-    // detail movie
+    // detail
     .get("/:id",controller.detail)
 
-    // create movie
+    // create
     .post("/",upload.single("image"),validations,controller.create)
 
-    // update movie
-    .put("/:id",upload.single("image"),controller.update)
+    // update
+    .put("/:id",upload.single("image"),validations,controller.update)
 
-    // delete movie
+    // delete
     .delete("/:id",controller.destroy)
+
+    // // search
+    // .get("/search",controller.search)
     
 module.exports = router;
