@@ -1,0 +1,5 @@
+/* copy this file and set the project env variables with your data */
+
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
