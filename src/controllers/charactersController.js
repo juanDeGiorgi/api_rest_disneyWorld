@@ -103,9 +103,5 @@ module.exports = {
             res.status(400).json(response);
         })
     },
-
-    search : (req,res) =>{
-
-    }
-
+    
 }

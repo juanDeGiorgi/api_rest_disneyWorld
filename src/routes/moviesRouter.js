@@ -20,8 +20,5 @@ router
 
     // delete
     .delete("/:id",controller.destroy)
-
-    // // search
-    // .get("/search",controller.search)
     
 module.exports = router;

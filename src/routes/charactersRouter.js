@@ -1,20 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middlewares/charatersUploads")
 
+const upload = require("../middlewares/charatersUploads")
 const controller = require("../controllers/charactersController");
+const validations = require("../validations/characters");
 
 router
-    // all characters 
+    // all
     .get("/",controller.list)
 
-    // detail character
+    // detail
     .get("/:id",controller.detail)
 
-    // create character
-    .post("/",upload.single("image"),controller.create)
+    // create
+    .post("/",upload.single("image"),validations,controller.create)
 
-    // delete character
+    // update
+    .put("/:id",upload.single("image"),validations,controller.update)
+
+    // delete
     .delete("/:id",controller.destroy)
     
 module.exports = router;

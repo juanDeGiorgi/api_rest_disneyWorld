@@ -7,11 +7,23 @@ const {Op} = require("sequelize");
 module.exports = {
 
     list : (req,res) =>{
-        if(req.query.name){
-            return this.search;
-        }
         db.movies.findAll({
-            attributes : [ "id","image","title","creationDate" ]
+            attributes : [ "id","image","title","creationDate" ],
+
+            where : {
+                title : {
+                    [Op.substring] : req.query.title ? req.query.title : ""
+                },
+
+                genderId : {
+                    [Op.substring] : req.query.gender ? req.query.gender : ""
+                } 
+
+            },
+
+            order : [
+                ["title",req.query.order ? req.query.order : "ASC"]
+            ]
         }).then(movies =>{
             movies.forEach(movie => {
                 movie.image = `${req.protocol}://${req.get("host")}/movies/${movie.image}`;
@@ -21,7 +33,7 @@ module.exports = {
             });
             const response = {
                 meta : {
-                    status : 800,
+                    status : 200,
                     url : `${req.protocol}://${req.get("host")}${req.originalUrl}`,
                     moviesQuantity : movies.length
                 },
@@ -115,6 +127,7 @@ module.exports = {
                     msg : "internal server error"
                 }
     
+                console.log(err);
                 res.status(500).json(response);
             })
         }else{
@@ -199,6 +212,9 @@ module.exports = {
                 if(!movie){
                     return Promise.reject();
                 }
+
+                fs.unlinkSync(path.join(__dirname,"..","uploads","movies",movie.image))
+
                 db.movies.destroy({
                     where : {
                         id : movie.id
@@ -214,10 +230,10 @@ module.exports = {
                 }).catch(err =>{
                     const response = {
                         status : 500,
-                        msg : "internal server error",
-                        errors : err
+                        msg : "internal server error"
                     }
         
+                    console.log(err);
                     res.status(500).json(response);
                 })
             }).catch(err =>{
@@ -237,26 +253,5 @@ module.exports = {
             res.status(400).json(response);
         }
     },
-
-    search : (req,res) =>{
-        db.movies.findOne({
-            where : {
-                name : {
-                    [Op.substring] : req.query.name
-                }
-            }
-        }).then(movie =>{
-            const response = {
-                meta : {
-                    status : 200,
-                    url : `${req.protocol}://${req.get("host")}${req.originalUlr}`,
-                    numberResults : movie.length 
-                },
-                results : movies
-            }
-
-            res.status(200).json(response);
-        })
-    }
 
 }
