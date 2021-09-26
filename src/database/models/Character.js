@@ -20,11 +20,11 @@ module.exports = (sequelize,dataTypes) =>{
             allowNull : false
         },
         age : {
-            type : dataTypes.INTEGER(4).UNSIGNED,
+            type : dataTypes.INTEGER.UNSIGNED,
             allowNull : false
         },
         weight : {
-            type : dataTypes.DECIMAL(5,2).UNSIGNED,
+            type : dataTypes.INTEGER.UNSIGNED,
             allowNull : false
         },
         history : {

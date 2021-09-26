@@ -1,5 +1,8 @@
+// module dependencies
 const {body} = require("express-validator");
 const path = require("path");
+
+// database
 const db = require("../database/models");
 
 module.exports = [
@@ -41,7 +44,20 @@ module.exports = [
                     return Promise.reject();
                 }
             }).catch(() => Promise.reject("the gender doesn't exist"))
-        })
+        }),
 
+    body("character")
+    .custom((value,{req}) =>{
+        if(value || req.body.character >= 0){
+            return db.characters.findByPk(value)
+            .then(character =>{
+                if(!character){
+                    return Promise.reject();
+                }
+            }).catch(() => Promise.reject("the character doesn't exist"))
+        }
+
+        return true   
+    })
     
 ]

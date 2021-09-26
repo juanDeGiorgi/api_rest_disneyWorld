@@ -1,8 +1,13 @@
+// database and operators parameters
 const db = require("../database/models");
+const {Op} = require("sequelize");
+
+// results of validations
+const { validationResult } = require("express-validator");
+
+// module dependencies
 const fs = require("fs");
 const path = require("path"); 
-const { validationResult } = require("express-validator");
-const {Op} = require("sequelize");
 
 module.exports = {
 
@@ -22,7 +27,7 @@ module.exports = {
             },
 
             order : [
-                ["title",req.query.order ? req.query.order : "ASC"]
+                ["title",req.query.order && req.query.order.toUpperCase() == "DESC" ? req.query.order : "ASC"]
             ]
         }).then(movies =>{
             movies.forEach(movie => {
@@ -37,16 +42,18 @@ module.exports = {
                     url : `${req.protocol}://${req.get("host")}${req.originalUrl}`,
                     moviesQuantity : movies.length
                 },
-                movies : movies
+                movies : movies.length > 0 ? movies : "there are no movies with these conditions"
+
             }
             res.status(200).json(response)
         }).catch(err =>{
             const response = {
-                status : 400,
-                msg : "there are no movies"
+                status : 500,
+                msg : "internal server error"
             }
 
-            res.status(400).json(response);
+            console.log(err);
+            res.status(500).json(response);
         })
     },
 
@@ -88,6 +95,7 @@ module.exports = {
                     msg : "the movie doesn't exist"
                 }
     
+                console.log(err);
                 res.status(400).json(response);
             })
         }else{
@@ -112,13 +120,36 @@ module.exports = {
                 genderId : +req.body.genderId
             }).then(movieCreated =>{
     
-                const response = {
-                    status : 201,
-                    msg : "movie created successfully",
-                    url : `${req.protocol}://${req.get("host")}/movies/${movieCreated.id}`
-                }
+                if(req.body.character){
+                    db.characterMovie.create({
+                        characterId : req.body.character,
+                        movieId : movieCreated.id
+                    }).then(result =>{
+                        const response = {
+                            status : 201,
+                            msg : "movie created successfully",
+                            url : `http://${req.get("host")}/movies/${movieCreated.id}`
+                        }                    
     
-                res.status(201).json(response);
+                        res.status(201).json(response);
+                    }).catch(err =>{
+                        const response = {
+                            status : 201,
+                            msg : "movie created but not related with the character",
+                            url : `http://${req.get("host")}/movies/${movieCreated.id}`
+                        }
+            
+                        res.status(201).json(response);    
+                    })
+                }else{
+                    const response = {
+                        status : 201,
+                        msg : "movie created successfully",
+                        url : `${req.protocol}://${req.get("host")}/movies/${movieCreated.id}`
+                    }
+        
+                    res.status(201).json(response);
+                }
             }).catch(err =>{
                 req.file ? fs.unlinkSync(path.join(__dirname,"../uploads/movies/",req.file.filename)) : null;
     
@@ -144,6 +175,7 @@ module.exports = {
     },
 
     update : (req,res) =>{
+        let oldImage;
         const errors = validationResult(req);
 
         db.movies.findByPk(req.params.id)
@@ -153,6 +185,8 @@ module.exports = {
             }
 
             if(errors.isEmpty()){
+                oldImage = movie.image;
+                
                 db.movies.update({
                     image : req.file ? req.file.filename : movie.image,
                     title : req.body.title,
@@ -164,6 +198,8 @@ module.exports = {
                         id : movie.id
                     }
                 }).then(movieUpdated =>{
+                    req.file ? fs.unlinkSync(path.join(__dirname,"..","uploads","movies",oldImage)) : null
+
                     const response = {
                         msg : "movie updated successfully ",
                         url : `${req.protocol}://${req.get("host")}/movies/${movie.id}`
@@ -222,8 +258,8 @@ module.exports = {
                 }).then(result =>{
                     const response = {
                         status : 200,
-                        url : `${req.protocol}://${req.get("host")}/movies/${req.params.id}`,
                         msg : "movie deleted successfully ",
+                        url : `${req.protocol}://${req.get("host")}/movies/${req.params.id}`,
                     }
         
                     res.status(200).json(response);

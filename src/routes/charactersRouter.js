@@ -1,8 +1,12 @@
+// module dependencies
 const express = require("express");
 const router = express.Router();
 
-const upload = require("../middlewares/charatersUploads")
+// module controller 
 const controller = require("../controllers/charactersController");
+
+// middlewares
+const upload = require("../middlewares/charatersUploads");
 const validations = require("../validations/characters");
 
 router
