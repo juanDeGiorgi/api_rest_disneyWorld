@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 const nodemailer = require("nodemailer")
 const sendGridTransport = require("nodemailer-sendgrid-transport");
-const YOUR_API_KEY = "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";
+const YOUR_API_KEY = process.env.SENDGRID_KEY;
 const transporter = nodemailer.createTransport(sendGridTransport({
     auth:{
         api_key:YOUR_API_KEY
@@ -31,7 +31,7 @@ module.exports = {
 
                 transporter.sendMail({
                     to: userCreated.email,
-                    from: "juanmadegiorgi@gmail.com",
+                    from: process.env.SENDGRID_EMAIL,
                     subject: "challenge alkemy backend NodeJs",
                     html: `<h3>Bienvenido!!! gracias por registrarte</h3>
                            <p>gracias por registrarte en mi api para explorar el mundo de disney\napartir de ahora cada ves que quieras usar la api deberas logearte y la api te devolvera un token para que uses en cada peticion</p>
