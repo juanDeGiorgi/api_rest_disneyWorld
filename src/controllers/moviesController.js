@@ -91,12 +91,12 @@ module.exports = {
                 res.status(200).json(response)
             }).catch(err =>{
                 const response = {
-                    status : 400,
+                    status : 404,
                     msg : "the movie doesn't exist"
                 }
     
                 console.log(err);
-                res.status(400).json(response);
+                res.status(404).json(response);
             })
         }else{
             const response = {
@@ -201,7 +201,8 @@ module.exports = {
                     req.file ? fs.unlinkSync(path.join(__dirname,"..","uploads","movies",oldImage)) : null
 
                     const response = {
-                        msg : "movie updated successfully ",
+                        status: 200,
+                        msg : "movie updated successfully",
                         url : `${req.protocol}://${req.get("host")}/movies/${movie.id}`
                     }
         
@@ -225,7 +226,6 @@ module.exports = {
                     status : 400,
                     msg : "error when updated the movie",
                     errors : errors.mapped(),
-    
                 }
                 res.status(400).json(response);
             }
@@ -258,7 +258,7 @@ module.exports = {
                 }).then(result =>{
                     const response = {
                         status : 200,
-                        msg : "movie deleted successfully ",
+                        msg : "movie deleted successfully",
                         url : `${req.protocol}://${req.get("host")}/movies/${req.params.id}`,
                     }
         

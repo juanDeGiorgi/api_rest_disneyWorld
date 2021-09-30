@@ -15,7 +15,8 @@ module.exports = {
         db.characters.findAll({
             attributes : ["id","image","name"],
 
-            include : [
+             
+            include : req.query.movie ? [
                 {association : "movies",
                     where : {
                         id : {
@@ -23,7 +24,7 @@ module.exports = {
                         }
                     }
                 }
-            ],
+            ] : null,
 
             where : {
                 name : {

@@ -9,7 +9,7 @@ module.exports = [
 
     body("image")
         .custom((value,{req}) =>{
-            let extensions = [".jpg",".png",".jpeg",".gif"]
+            let extensions = [".jpg",".png",".jpeg",".gif",".webp"]
 
             if(!req.file && req.method != "PUT"){
                 throw new Error("required")
