@@ -13,16 +13,15 @@ servers:
 tags:
   - name: auth
     description: >-
-      este enpoint se encarga del registro de usuarios de la api y la emicion de
+      se encarga del registro de usuarios de la api y la emicion de
       los token para el uso de la misma
   - name: movies
     description: >-
-      este endpoint maneja todas las acciones relacionadas al manejo de las
+      maneja todas las acciones relacionadas a las
       peliculas dentro de la api
   - name: characters
     description: >-
-      este endpoint maneja todas las acciones relacionadas al manejo de los
-      personajes dentro de la api
+      maneja todas las acciones relacionadas a los personajes dentro de la api
 paths:
   /auth/register:
     post:

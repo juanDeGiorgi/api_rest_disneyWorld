@@ -45,19 +45,5 @@ module.exports = [
                 }
             }).catch(() => Promise.reject("the gender doesn't exist"))
         }),
-
-    body("character")
-    .custom((value,{req}) =>{
-        if(value || req.body.character >= 0){
-            return db.characters.findByPk(value)
-            .then(character =>{
-                if(!character){
-                    return Promise.reject();
-                }
-            }).catch(() => Promise.reject("the character doesn't exist"))
-        }
-
-        return true   
-    })
     
 ]

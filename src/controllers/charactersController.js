@@ -123,36 +123,13 @@ module.exports = {
                 weight : +req.body.weight,
                 history : req.body.history
             }).then(characterCreated =>{
-    
-                if(req.body.movie){
-                    db.characterMovie.create({
-                        characterId : characterCreated.id,
-                        movieId : req.body.movie
-                    }).then(result =>{
-                        const response = {
-                            status : 201,
-                            msg : "character created successfully",
-                            url : `http://${req.get("host")}/characters/${characterCreated.id}`
-                        }                    
-    
-                        res.status(201).json(response);
-                    }).catch(err =>{
-                        const response = {
-                            status : 201,
-                            msg : "character created but not related with the movie",
-                            url : `http://${req.get("host")}/characters/${characterCreated.id}`
-                        }
-            
-                        res.status(201).json(response);    
-                    })
-                }else{
                     const response = {
                         status : 201,
                         msg : "character created successfully",
                         url : `http://${req.get("host")}/characters/${characterCreated.id}`
                     }
                     res.status(201).json(response);
-                }
+                
             }).catch(err =>{
                 req.file ? fs.unlinkSync(path.join(__dirname,"..","uploads","characters",req.file.filename)) : null;
     

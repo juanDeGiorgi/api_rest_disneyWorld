@@ -119,37 +119,14 @@ module.exports = {
                 rating : +req.body.rating,
                 genderId : +req.body.genderId
             }).then(movieCreated =>{
-    
-                if(req.body.character){
-                    db.characterMovie.create({
-                        characterId : req.body.character,
-                        movieId : movieCreated.id
-                    }).then(result =>{
-                        const response = {
-                            status : 201,
-                            msg : "movie created successfully",
-                            url : `http://${req.get("host")}/movies/${movieCreated.id}`
-                        }                    
-    
-                        res.status(201).json(response);
-                    }).catch(err =>{
-                        const response = {
-                            status : 201,
-                            msg : "movie created but not related with the character",
-                            url : `http://${req.get("host")}/movies/${movieCreated.id}`
-                        }
-            
-                        res.status(201).json(response);    
-                    })
-                }else{
-                    const response = {
-                        status : 201,
-                        msg : "movie created successfully",
-                        url : `${req.protocol}://${req.get("host")}/movies/${movieCreated.id}`
-                    }
-        
-                    res.status(201).json(response);
+                const response = {
+                    status : 201,
+                    msg : "movie created successfully",
+                    url : `${req.protocol}://${req.get("host")}/movies/${movieCreated.id}`
                 }
+    
+                res.status(201).json(response);
+                
             }).catch(err =>{
                 req.file ? fs.unlinkSync(path.join(__dirname,"../uploads/movies/",req.file.filename)) : null;
     

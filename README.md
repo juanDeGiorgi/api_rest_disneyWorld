@@ -17,7 +17,7 @@
 
  ## Documentacion
 
- La api cuenta con documentacion hecha en Swagger ,la misma se encuentra en la carpeta document en un archivo yaml
+ La api cuenta con documentacion hecha en Swagger ,la misma se puede visualizar corriendo el proyecto y yendo a "/api-doc"
 
 
  ## como usar

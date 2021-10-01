@@ -12,11 +12,11 @@ module.exports = (sequelize,dataTypes) =>{
             allowNull : false
         },
         characterId : {
-            type : dataTypes.STRING,
+            type : dataTypes.INTEGER,
             allowNull : false
         },
         movieId : {
-            type : dataTypes.STRING,
+            type : dataTypes.INTEGER,
             allowNull : false
         }
 

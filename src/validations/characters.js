@@ -38,18 +38,4 @@ module.exports = [
     .notEmpty().withMessage("required")
     .isLength({max : 1000}).withMessage("max charecter exceeded"),
 
-
-    body("movie")
-    .custom((value,{req}) =>{
-        if(value || req.body.movie >= 0){
-            return db.movies.findByPk(value)
-            .then(movie =>{
-                if(!movie){
-                    return Promise.reject();
-                }
-            }).catch(() => Promise.reject("the movie doesn't exist"))
-        }
-
-        return true   
-    })
 ]
